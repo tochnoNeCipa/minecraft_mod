@@ -1,0 +1,7 @@
+{
+  "item.robohelper.robot_body": "Robot Body",
+  "entity.robohelper.robot": "Robot Helper",
+  "itemGroup.robohelper": "RoboHelper",
+  "message.robohelper.not_owner": "This is not your robot",
+  "message.robohelper.robot_status": "Your robot: health %s/%s"
+}

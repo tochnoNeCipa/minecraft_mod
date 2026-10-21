@@ -16,9 +16,16 @@ jobs:
           java-version: '17'
       - uses: gradle/actions/setup-gradle@v4
       - name: Build mod
-        run: ./gradlew build --no-daemon
+        run: ./gradlew build runGametest --no-daemon
       - uses: actions/upload-artifact@v4
         with:
           name: robohelper
           path: build/libs/*.jar
           if-no-files-found: error
+      - name: Upload server test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gametest-results
+          path: build/gametest-results.xml
+          if-no-files-found: warn

@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "id": "robohelper_gametest",
+  "version": "1.0.0",
+  "name": "RoboHelper server tests",
+  "environment": "server",
+  "entrypoints": {
+    "main": ["com.robohelper.gametest.TestContent"],
+    "fabric-gametest": ["com.robohelper.gametest.RobotTests"]
+  },
+  "depends": {"robohelper": "*", "fabric-gametest-api-v1": "*"}
+}
