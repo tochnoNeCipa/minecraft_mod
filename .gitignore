@@ -1,0 +1,10 @@
+# Gradle and build outputs
+.gradle/
+build/
+run/
+runServer/
+# Editors and local machine settings
+.idea/
+*.iml
+.vscode/
+.DS_Store

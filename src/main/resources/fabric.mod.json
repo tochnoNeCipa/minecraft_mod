@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "id": "robohelper",
+  "version": "${version}",
+  "name": "RoboHelper",
+  "description": "Модульный робот-помощник: лесоруб, фермер, шахтёр, охранник и логист.",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["com.robohelper.RoboHelper"],
+    "client": ["com.robohelper.RoboHelperClient"]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.14",
+    "minecraft": "~1.20.1",
+    "java": ">=17",
+    "fabric-api": "*"
+  }
+}
