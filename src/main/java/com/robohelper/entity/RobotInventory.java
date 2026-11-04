@@ -2,6 +2,7 @@ package com.robohelper.entity;
 
 import com.robohelper.config.RobotConfig;
 import com.robohelper.item.RobotModuleItem;
+import com.robohelper.inventory.InventoryTransfer;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
@@ -9,6 +10,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.Identifier;
 
 /** Инвентарь робота: хранение, топливо и три слота предметов-модулей. */
 public final class RobotInventory implements Inventory {
@@ -69,12 +71,17 @@ public final class RobotInventory implements Inventory {
 
     @Override
     public boolean canPlayerUse(PlayerEntity player) {
-        return robot.isAlive() && robot.isOwner(player)
+        return robot.isAlive() && player.getWorld() == robot.getWorld() && robot.isOwner(player)
                 && player.squaredDistanceTo(robot) <= RobotConfig.INTERACTION_DISTANCE_SQUARED;
     }
 
     @Override
     public boolean isValid(int slot, ItemStack stack) {
+        return canInsert(this, slot, stack);
+    }
+
+    /** Общие фильтры для настоящих слотов и их синхронизированной клиентской копии. */
+    public static boolean canInsert(Inventory inventory, int slot, ItemStack stack) {
         if (slot < 0 || slot >= SIZE) {
             return false;
         }
@@ -85,7 +92,28 @@ public final class RobotInventory implements Inventory {
             Integer burnTime = FuelRegistry.INSTANCE.get(stack.getItem());
             return burnTime != null && burnTime > 0;
         }
-        return stack.getItem() instanceof RobotModuleItem;
+        if (!(stack.getItem() instanceof RobotModuleItem module)) {
+            return false;
+        }
+        for (int other = FIRST_MODULE_SLOT; other < SIZE; other++) {
+            ItemStack existing = inventory.getStack(other);
+            if (other != slot && existing.getItem() instanceof RobotModuleItem installed
+                    && installed.getModuleId().equals(module.getModuleId())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** Проверяет установленную профессию без зависимости от класса её поведения. */
+    public boolean hasModule(Identifier moduleId) {
+        for (int slot = FIRST_MODULE_SLOT; slot < SIZE; slot++) {
+            if (stacks.get(slot).getItem() instanceof RobotModuleItem module
+                    && module.getModuleId().equals(moduleId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -96,25 +124,7 @@ public final class RobotInventory implements Inventory {
 
     /** Помещает предметы только в 18 слотов хранения, возвращая непоместившуюся копию. */
     public ItemStack insertStorage(ItemStack stack) {
-        ItemStack remaining = stack.copy();
-        for (int slot = 0; slot < RobotConfig.STORAGE_SLOTS && !remaining.isEmpty(); slot++) {
-            ItemStack existing = stacks.get(slot);
-            if (!existing.isEmpty() && ItemStack.canCombine(existing, remaining)) {
-                int amount = Math.min(remaining.getCount(), Math.max(0,
-                        Math.min(existing.getMaxCount(), getMaxCountPerStack()) - existing.getCount()));
-                existing.increment(amount);
-                remaining.decrement(amount);
-            }
-        }
-        for (int slot = 0; slot < RobotConfig.STORAGE_SLOTS && !remaining.isEmpty(); slot++) {
-            if (stacks.get(slot).isEmpty()) {
-                int amount = Math.min(remaining.getCount(), Math.min(remaining.getMaxCount(), getMaxCountPerStack()));
-                stacks.set(slot, remaining.copyWithCount(amount));
-                remaining.decrement(amount);
-            }
-        }
-        markDirty();
-        return remaining;
+        return InventoryTransfer.insert(this, stack, 0, RobotConfig.STORAGE_SLOTS);
     }
 
     /** Записывает слоты с сохранением индексов, количества и NBT предметов. */

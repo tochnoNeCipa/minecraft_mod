@@ -2,6 +2,7 @@ package com.robohelper;
 
 import com.robohelper.registry.ModEntities;
 import com.robohelper.registry.ModItems;
+import com.robohelper.registry.ModScreens;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ public final class RoboHelper implements ModInitializer {
     public void onInitialize() {
         ModEntities.initialize();
         ModItems.initialize();
+        ModScreens.initialize();
         LOGGER.info("RoboHelper initialized");
     }
 }

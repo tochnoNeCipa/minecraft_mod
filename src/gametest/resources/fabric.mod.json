@@ -10,7 +10,8 @@
     ],
     "fabric-gametest": [
       "com.robohelper.gametest.RobotTests",
-      "com.robohelper.gametest.ModeEnergyTests"
+      "com.robohelper.gametest.ModeEnergyTests",
+      "com.robohelper.gametest.ScreenTests"
     ]
   },
   "depends": {

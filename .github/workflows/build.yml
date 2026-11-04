@@ -15,17 +15,21 @@ jobs:
           distribution: temurin
           java-version: '17'
       - uses: gradle/actions/setup-gradle@v4
+      - name: Read mod version
+        id: version
+        shell: bash
+        run: echo "value=$(sed -n 's/^mod_version=//p' gradle.properties)" >> "$GITHUB_OUTPUT"
       - name: Build mod
         run: ./gradlew build runGametest --no-daemon
       - uses: actions/upload-artifact@v4
         with:
-          name: robohelper
+          name: robohelper-${{ steps.version.outputs.value }}
           path: build/libs/*.jar
           if-no-files-found: error
       - name: Upload server test report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: gametest-results
+          name: gametest-results-${{ steps.version.outputs.value }}
           path: build/gametest-results.xml
           if-no-files-found: warn

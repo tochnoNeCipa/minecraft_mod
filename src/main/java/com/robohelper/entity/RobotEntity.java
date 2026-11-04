@@ -3,6 +3,9 @@ package com.robohelper.entity;
 import com.robohelper.ai.goal.FollowOwnerGoal;
 import com.robohelper.ai.goal.ReturnToZoneGoal;
 import com.robohelper.config.RobotConfig;
+import com.robohelper.inventory.InventoryTransfer;
+import com.robohelper.screen.RobotScreenHandler;
+import com.robohelper.screen.RobotStatus;
 
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.entity.EntityType;
@@ -16,6 +19,10 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.util.math.Direction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -34,11 +41,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 /** Постоянная сущность робота: владелец, базовые свойства и собственные слоты. */
-public final class RobotEntity extends PathAwareEntity {
+public final class RobotEntity extends PathAwareEntity implements NamedScreenHandlerFactory {
     private static final TrackedData<Integer> ENERGY = DataTracker.registerData(
             RobotEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> MODE = DataTracker.registerData(
             RobotEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private Direction minerDirection = Direction.NORTH;
     private BlockPos zoneCenter;
     private int zoneRadius = RobotConfig.ZONE_RADIUS;
     private boolean returningToZone;
@@ -255,6 +263,68 @@ public final class RobotEntity extends PathAwareEntity {
     }
 
     @Override
+    @Nullable
+    public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
+        return inventory.canPlayerUse(player) ? new RobotScreenHandler(syncId, playerInventory, this) : null;
+    }
+
+    /** Выгружает только хранение; топливо и модули остаются на месте. */
+    public void unloadStorage(PlayerEntity player) {
+        if (getWorld().isClient || !inventory.canPlayerUse(player)) {
+            return;
+        }
+        for (int slot = 0; slot < RobotConfig.STORAGE_SLOTS; slot++) {
+            ItemStack stack = inventory.removeStack(slot);
+            if (!stack.isEmpty()) {
+                ItemStack remaining = InventoryTransfer.insert(player.getInventory(), stack, 0,
+                        player.getInventory().main.size());
+                if (!remaining.isEmpty()) {
+                    player.dropItem(remaining, false);
+                }
+            }
+        }
+    }
+
+    /** Текущая сторона света для будущего тоннеля шахтёра. */
+    public Direction getMinerDirection() {
+        return minerDirection;
+    }
+
+    /** Направление кнопки задаётся текущим поворотом робота, только по горизонтали. */
+    public void setMinerDirection(Direction direction) {
+        if (direction.getAxis().isVertical()) {
+            throw new IllegalArgumentException("Miner direction must be horizontal");
+        }
+        minerDirection = direction;
+    }
+
+    /** Статус вычисляется на сервере и передаётся экрану стандартными свойствами. */
+    public RobotStatus getStatus() {
+        if (getMode() == RobotMode.IDLE) {
+            return RobotStatus.IDLE;
+        }
+        if (getMode() == RobotMode.FOLLOW) {
+            PlayerEntity owner = getOwnerPlayer();
+            if (owner == null || !owner.isAlive() || owner.isSpectator()) {
+                return RobotStatus.OWNER_UNAVAILABLE;
+            }
+            return getNavigation().isIdle() ? RobotStatus.IDLE : RobotStatus.FOLLOWING;
+        }
+        if (!canWork()) {
+            return RobotStatus.LOW_ENERGY;
+        }
+        if (requiresZoneReturn()) {
+            return RobotStatus.RETURNING;
+        }
+        for (int slot = RobotInventory.FIRST_MODULE_SLOT; slot < inventory.size(); slot++) {
+            if (!inventory.getStack(slot).isEmpty()) {
+                return RobotStatus.WORKING;
+            }
+        }
+        return RobotStatus.NO_MODULES;
+    }
+
+    @Override
     public boolean canBeLeashedBy(PlayerEntity player) {
         return false;
     }
@@ -271,9 +341,11 @@ public final class RobotEntity extends PathAwareEntity {
         }
         ItemStack held = player.getStackInHand(hand);
         if (held.isEmpty()) {
-            player.sendMessage(Text.translatable("message.robohelper.robot_status",
-                    (int) getHealth(), (int) getMaxHealth(), getEnergy(), RobotConfig.ENERGY_CAPACITY,
-                    Text.translatable("mode.robohelper." + getMode().name().toLowerCase(java.util.Locale.ROOT))), true);
+            if (player.isSneaking()) {
+                unloadStorage(player);
+            } else {
+                player.openHandledScreen(this);
+            }
             return ActionResult.CONSUME;
         }
         if (inventory.isValid(RobotInventory.FUEL_SLOT, held)) {
@@ -324,6 +396,7 @@ public final class RobotEntity extends PathAwareEntity {
         if (ownerUuid != null) {
             nbt.putUuid("Owner", ownerUuid);
         }
+        nbt.putString("MinerDir", minerDirection.getName());
         nbt.putInt("Energy", getEnergy());
         nbt.putString("Mode", getMode().name());
         BlockPos center = getZoneCenter();
@@ -339,6 +412,9 @@ public final class RobotEntity extends PathAwareEntity {
         super.readCustomDataFromNbt(nbt);
         ownerUuid = nbt.containsUuid("Owner") ? nbt.getUuid("Owner") : null;
         inventory.readNbt(nbt.getCompound("Inventory"));
+        Direction savedDirection = Direction.byName(nbt.getString("MinerDir"));
+        minerDirection = savedDirection != null && savedDirection.getAxis().isHorizontal()
+                ? savedDirection : getHorizontalFacing();
         setEnergy(nbt.getInt("Energy"));
         setMode(RobotMode.fromNbt(nbt.getString("Mode")));
         int[] center = nbt.getIntArray("ZoneCenter");
