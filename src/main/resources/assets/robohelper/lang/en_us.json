@@ -3,5 +3,9 @@
   "entity.robohelper.robot": "Robot Helper",
   "itemGroup.robohelper": "RoboHelper",
   "message.robohelper.not_owner": "This is not your robot",
-  "message.robohelper.robot_status": "Your robot: health %s/%s"
+  "message.robohelper.robot_status": "Your robot: health %s/%s · energy %s/%s · %s",
+  "message.robohelper.fuel_slot_full": "The fuel slot is full or contains another item",
+  "mode.robohelper.work": "Work",
+  "mode.robohelper.idle": "Idle",
+  "mode.robohelper.follow": "Follow"
 }

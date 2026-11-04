@@ -41,6 +41,7 @@ public final class RobotSpawnItem extends Item {
         robot.refreshPositionAndAngles(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5,
                 context.getPlayerYaw(), 0);
         robot.setOwnerUuid(player.getUuid());
+        robot.setZoneCenter(pos);
         if (!world.getWorldBorder().contains(robot.getBoundingBox())
                 || !world.isSpaceEmpty(robot) || !world.spawnEntity(robot)) {
             return ActionResult.FAIL;

@@ -5,8 +5,16 @@
   "name": "RoboHelper server tests",
   "environment": "server",
   "entrypoints": {
-    "main": ["com.robohelper.gametest.TestContent"],
-    "fabric-gametest": ["com.robohelper.gametest.RobotTests"]
+    "main": [
+      "com.robohelper.gametest.TestContent"
+    ],
+    "fabric-gametest": [
+      "com.robohelper.gametest.RobotTests",
+      "com.robohelper.gametest.ModeEnergyTests"
+    ]
   },
-  "depends": {"robohelper": "*", "fabric-gametest-api-v1": "*"}
+  "depends": {
+    "robohelper": "*",
+    "fabric-gametest-api-v1": "*"
+  }
 }

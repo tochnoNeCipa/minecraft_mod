@@ -15,6 +15,22 @@ public final class RobotConfig {
     public static final float LOOK_RANGE = 8.0F;
     public static final float SHADOW_RADIUS = 0.4F;
 
+    public static final int ENERGY_CAPACITY = 6400;
+    public static final int LOW_ENERGY_THRESHOLD = ENERGY_CAPACITY / 20;
+    public static final int WALK_ENERGY_COST = 1;
+    public static final int TICKS_PER_SECOND = 20;
+    public static final int LOW_ENERGY_SIGNAL_INTERVAL = 100;
+    public static final int ZONE_RADIUS = 15;
+    public static final int ZONE_VERTICAL_RADIUS = 8;
+    public static final double FOLLOW_START_DISTANCE = 6.0;
+    public static final double FOLLOW_STOP_DISTANCE = 3.0;
+    public static final double FOLLOW_TELEPORT_DISTANCE = 24.0;
+    public static final double NAVIGATION_SPEED = 1.0;
+    public static final int FOLLOW_REPATH_INTERVAL = 10;
+    public static final int RETURN_RETRY_INTERVAL = 40;
+    public static final double RETURN_ARRIVAL_DISTANCE = 1.5;
+    public static final int TELEPORT_RADIUS = 2;
+
     private RobotConfig() {
     }
 }

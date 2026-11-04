@@ -94,6 +94,29 @@ public final class RobotInventory implements Inventory {
         markDirty();
     }
 
+    /** Помещает предметы только в 18 слотов хранения, возвращая непоместившуюся копию. */
+    public ItemStack insertStorage(ItemStack stack) {
+        ItemStack remaining = stack.copy();
+        for (int slot = 0; slot < RobotConfig.STORAGE_SLOTS && !remaining.isEmpty(); slot++) {
+            ItemStack existing = stacks.get(slot);
+            if (!existing.isEmpty() && ItemStack.canCombine(existing, remaining)) {
+                int amount = Math.min(remaining.getCount(), Math.max(0,
+                        Math.min(existing.getMaxCount(), getMaxCountPerStack()) - existing.getCount()));
+                existing.increment(amount);
+                remaining.decrement(amount);
+            }
+        }
+        for (int slot = 0; slot < RobotConfig.STORAGE_SLOTS && !remaining.isEmpty(); slot++) {
+            if (stacks.get(slot).isEmpty()) {
+                int amount = Math.min(remaining.getCount(), Math.min(remaining.getMaxCount(), getMaxCountPerStack()));
+                stacks.set(slot, remaining.copyWithCount(amount));
+                remaining.decrement(amount);
+            }
+        }
+        markDirty();
+        return remaining;
+    }
+
     /** Записывает слоты с сохранением индексов, количества и NBT предметов. */
     public void writeNbt(NbtCompound nbt) {
         Inventories.writeNbt(nbt, stacks);
