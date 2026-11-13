@@ -218,9 +218,7 @@ public final class FarmerGoal extends Goal {
     }
 
     private boolean near(BlockPos pos) {
-        BlockPos below = BlockPos.ofFloored(robot.getX(), robot.getY() - 0.01, robot.getZ());
-        return !robot.getWorld().getBlockState(below).isOf(Blocks.FARMLAND)
-                && distance(pos) <= RobotConfig.WORK_REACH * RobotConfig.WORK_REACH;
+        return distance(pos) <= RobotConfig.WORK_REACH * RobotConfig.WORK_REACH;
     }
 
     private boolean sameZone() {

@@ -95,30 +95,61 @@ public final class FarmerTests implements FabricGameTest {
     }
 
     @GameTest(templateName = TEMPLATE, batchId = BATCH, tickLimit = 500)
-    public void navigationWalksAroundField(TestContext context) {
+    public void navigationCrossesFieldToCentralCrop(TestContext context) {
         RobotEntity robot = robot(context);
         robot.getInventory().setStack(0, new ItemStack(Items.WHEAT_SEEDS, 2));
-        for (int x = 25; x <= 29; x++) {
-            for (int z = 22; z <= 26; z++) {
+        for (int x = 25; x <= 35; x++) {
+            for (int z = 19; z <= 29; z++) {
                 crop(context, new BlockPos(x, 2, z), Blocks.WHEAT, false);
             }
         }
-        BlockPos ripe = new BlockPos(31, 2, 24);
+        BlockPos ripe = new BlockPos(30, 2, 24);
         crop(context, ripe, Blocks.WHEAT, true);
+        boolean[] crossedFarmland = {false};
         context.runAtEveryTick(() -> {
             BlockPos below = BlockPos.ofFloored(robot.getX(), robot.getY() - 0.01, robot.getZ());
-            context.assertFalse(context.getWorld().getBlockState(below).isOf(Blocks.FARMLAND),
-                    "Маршрут не проходит по грядкам");
+            if (context.getWorld().getBlockState(below).isOf(Blocks.FARMLAND)) {
+                crossedFarmland[0] = true;
+            }
         });
         context.addInstantFinalTask(() -> {
             context.assertTrue(context.getBlockState(ripe).isOf(Blocks.WHEAT)
-                    && ((CropBlock) Blocks.WHEAT).getAge(context.getBlockState(ripe)) == 0, "Дальний урожай собран и пересажен");
-            context.assertTrue(counter(robot) == 2 && robot.getInventory().count(Items.WHEAT) == 1, "Собрана одна спелая культура");
-            for (int x = 25; x <= 29; x++) {
-                for (int z = 22; z <= 26; z++) {
-                    context.assertTrue(context.getBlockState(new BlockPos(x, 1, z)).isOf(Blocks.FARMLAND), "Все грядки сохранены");
+                    && ((CropBlock) Blocks.WHEAT).getAge(context.getBlockState(ripe)) == 0,
+                    "Урожай в середине сплошного поля собран и пересажен");
+            context.assertTrue(crossedFarmland[0], "Робот действительно прошёл по грядкам");
+            context.assertTrue(counter(robot) == 2 && robot.getInventory().count(Items.WHEAT) == 1,
+                    "Собрана только одна спелая культура");
+            for (int x = 25; x <= 35; x++) {
+                for (int z = 19; z <= 29; z++) {
+                    BlockPos cell = new BlockPos(x, 2, z);
+                    context.assertTrue(context.getBlockState(cell.down()).isOf(Blocks.FARMLAND), "Все грядки сохранены");
+                    context.assertTrue(context.getBlockState(cell).isOf(Blocks.WHEAT)
+                            && ((CropBlock) Blocks.WHEAT).getAge(context.getBlockState(cell)) == 0,
+                            "Неспелые посевы по пути не повреждены");
                 }
             }
+        });
+    }
+
+    @GameTest(templateName = TEMPLATE, batchId = BATCH, tickLimit = 160)
+    public void farmerStandingOnFarmlandCanWork(TestContext context) {
+        RobotEntity robot = robot(context);
+        for (int dx = -3; dx <= 3; dx++) {
+            for (int dz = -3; dz <= 3; dz++) {
+                context.setBlockState(HOME.add(dx, -1, dz), Blocks.FARMLAND);
+            }
+        }
+        BlockPos ripe = HOME.east();
+        crop(context, ripe, Blocks.WHEAT, true);
+        robot.getInventory().setStack(0, new ItemStack(Items.WHEAT_SEEDS, 2));
+        context.addInstantFinalTask(() -> {
+            context.assertTrue(counter(robot) == 2 && context.getBlockState(ripe).isOf(Blocks.WHEAT)
+                    && ((CropBlock) Blocks.WHEAT).getAge(context.getBlockState(ripe)) == 0,
+                    "Стоя на грядке, фермер собирает и пересаживает соседний урожай");
+            BlockPos below = BlockPos.ofFloored(robot.getX(), robot.getY() - 0.01, robot.getZ());
+            context.assertTrue(context.getWorld().getBlockState(below).isOf(Blocks.FARMLAND),
+                    "Действия выполнены с позиции на грядке");
+            context.assertTrue(context.getBlockState(HOME.down()).isOf(Blocks.FARMLAND), "Грядка под роботом сохранена");
         });
     }
 

@@ -3,6 +3,8 @@ package com.robohelper.ai;
 import com.robohelper.config.RobotConfig;
 import com.robohelper.entity.RobotEntity;
 import net.minecraft.entity.ai.pathing.Path;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
@@ -27,13 +29,18 @@ public final class WorkNavigation {
                     }
                     BlockPos pos = target.add(dx, dy, dz);
                     if (!robot.isInsideWorkZone(pos) || !robot.getWorld().isChunkLoaded(pos)
-                            || !robot.getWorld().getFluidState(pos).isEmpty()
-                            || !robot.getWorld().getBlockState(pos.down())
-                                    .isSideSolidFullSquare(robot.getWorld(), pos.down(), Direction.UP)) {
+                            || !robot.getWorld().getFluidState(pos).isEmpty()) {
                         continue;
                     }
+                    BlockState support = robot.getWorld().getBlockState(pos.down());
+                    boolean farmland = support.isOf(Blocks.FARMLAND);
+                    if (!farmland && !support.isSideSolidFullSquare(robot.getWorld(), pos.down(), Direction.UP)) {
+                        continue;
+                    }
+                    // Farmland is 15/16 high: check clearance at the actual standing height.
+                    double standingY = pos.getY() - (farmland ? 1.0 / 16.0 : 0.0);
                     Box box = robot.getBoundingBox().offset(pos.getX() + 0.5 - robot.getX(),
-                            pos.getY() - robot.getY(), pos.getZ() + 0.5 - robot.getZ());
+                            standingY - robot.getY(), pos.getZ() + 0.5 - robot.getZ());
                     if (robot.getWorld().isSpaceEmpty(robot, box)) {
                         targets.add(pos);
                     }

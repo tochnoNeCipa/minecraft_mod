@@ -1,7 +1,7 @@
 package com.robohelper.entity;
 
 import com.robohelper.ai.goal.FollowOwnerGoal;
-import com.robohelper.ai.RobotNavigation;
+import net.minecraft.entity.ai.pathing.MobNavigation;
 import net.minecraft.entity.ai.pathing.EntityNavigation;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -99,7 +99,7 @@ public final class RobotEntity extends PathAwareEntity implements NamedScreenHan
 
     @Override
     protected EntityNavigation createNavigation(World world) {
-        return new RobotNavigation(this, world);
+        return new MobNavigation(this, world);
     }
 
     @Override
