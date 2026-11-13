@@ -37,5 +37,6 @@ public final class ModuleRegistry {
     /** Регистрирует встроенные профессии при запуске мода. */
     public static void initialize() {
         register(LumberjackModule.ID, LumberjackModule::new);
+        register(FarmerModule.ID, FarmerModule::new);
     }
 }

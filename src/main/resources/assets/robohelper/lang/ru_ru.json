@@ -39,5 +39,9 @@
   "status.robohelper.chopping_tree": "Рублю дерево",
   "status.robohelper.planting_tree": "Сажаю саженец",
   "status.robohelper.storage_full": "Хранилище заполнено",
-  "message.robohelper.storage_full": "У робота нет места для добычи. Освободите хранилище."
+  "message.robohelper.storage_full": "У робота нет места для добычи. Освободите хранилище.",
+  "item.robohelper.farmer_module": "Модуль «Фермер»",
+  "status.robohelper.searching_crop": "Ищу спелый урожай",
+  "status.robohelper.harvesting": "Собираю урожай",
+  "status.robohelper.planting_crop": "Пересаживаю культуру"
 }

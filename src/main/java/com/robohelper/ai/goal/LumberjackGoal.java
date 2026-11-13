@@ -1,6 +1,7 @@
 package com.robohelper.ai.goal;
 
 import com.robohelper.ai.TreeFinder;
+import com.robohelper.ai.WorkNavigation;
 import com.robohelper.config.RobotConfig;
 import com.robohelper.entity.RobotEntity;
 import com.robohelper.module.LumberjackModule;
@@ -17,10 +18,6 @@ import net.minecraft.item.Items;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Box;
-import java.util.Set;
-import java.util.HashSet;
 import net.minecraft.world.WorldEvents;
 import java.util.ArrayDeque;
 import java.util.EnumSet;
@@ -61,7 +58,7 @@ public final class LumberjackGoal extends Goal {
             return true;
         }
         robot.setModuleStatus(RobotStatus.SEARCHING_TREE);
-        if (!robot.tryBeginWorkScan()) {
+        if (!robot.tryBeginWorkScan(module.getId())) {
             return false;
         }
         long now = robot.getWorld().getTime();
@@ -205,13 +202,7 @@ public final class LumberjackGoal extends Goal {
         }
         remaining.removeFirst();
         world.syncWorldEvent(WorldEvents.BLOCK_BROKEN, pos, Block.getRawIdFromState(state));
-        for (ItemStack drop : drops) {
-            ItemStack excess = robot.getInventory().insertStorage(drop);
-            if (!excess.isEmpty()) {
-                robot.dropStack(excess);
-                robot.blockWorkForStorage(excess);
-            }
-        }
+        robot.collectWorkDrops(drops);
         return true;
     }
 
@@ -248,41 +239,7 @@ public final class LumberjackGoal extends Goal {
 
     /** Ищет доступное место в радиусе рубки; все узлы пути также остаются в зоне. */
     private Path pathToTree(BlockPos root) {
-        Set<BlockPos> targets = new HashSet<>();
-        for (int dx = -2; dx <= 2; dx++) {
-            for (int dy = -1; dy <= 1; dy++) {
-                for (int dz = -2; dz <= 2; dz++) {
-                    if (dx * dx + dy * dy + dz * dz > RobotConfig.TREE_STAND_RADIUS * RobotConfig.TREE_STAND_RADIUS) {
-                        continue;
-                    }
-                    BlockPos pos = root.add(dx, dy, dz);
-                    if (!robot.isInsideWorkZone(pos) || !robot.getWorld().isChunkLoaded(pos)
-                            || !robot.getWorld().getFluidState(pos).isEmpty()
-                            || !robot.getWorld().getBlockState(pos.down())
-                                    .isSideSolidFullSquare(robot.getWorld(), pos.down(), Direction.UP)) {
-                        continue;
-                    }
-                    Box box = robot.getBoundingBox().offset(pos.getX() + 0.5 - robot.getX(),
-                            pos.getY() - robot.getY(), pos.getZ() + 0.5 - robot.getZ());
-                    if (robot.getWorld().isSpaceEmpty(robot, box)) {
-                        targets.add(pos);
-                    }
-                }
-            }
-        }
-        if (targets.isEmpty()) {
-            return null;
-        }
-        Path path = robot.getNavigation().findPathTo(targets, 0);
-        if (path == null || !path.reachesTarget()) {
-            return null;
-        }
-        for (int node = 0; node < path.getLength(); node++) {
-            if (!robot.isInsideWorkZone(path.getNode(node).getBlockPos())) {
-                return null;
-            }
-        }
-        return path;
+        return WorkNavigation.findPathNear(robot, root);
     }
 
     private boolean near(BlockPos pos) {

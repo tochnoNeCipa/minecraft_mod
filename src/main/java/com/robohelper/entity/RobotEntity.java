@@ -1,6 +1,14 @@
 package com.robohelper.entity;
 
 import com.robohelper.ai.goal.FollowOwnerGoal;
+import com.robohelper.ai.RobotNavigation;
+import net.minecraft.entity.ai.pathing.EntityNavigation;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.util.Identifier;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.List;
 import com.robohelper.ai.goal.ReturnToZoneGoal;
 import com.robohelper.config.RobotConfig;
 import com.robohelper.module.ModuleManager;
@@ -61,6 +69,7 @@ public final class RobotEntity extends PathAwareEntity implements NamedScreenHan
     private ItemStack blockedStorageDrop = ItemStack.EMPTY;
     private RobotStatus moduleStatus = RobotStatus.WORKING;
     private long nextWorkScanTick;
+    private final Map<Identifier, Long> scanRequests = new LinkedHashMap<>();
     private long nextStorageMessageTick;
     private UUID ownerUuid;
 
@@ -84,6 +93,17 @@ public final class RobotEntity extends PathAwareEntity implements NamedScreenHan
         super.initDataTracker();
         dataTracker.startTracking(ENERGY, 0);
         dataTracker.startTracking(MODE, RobotMode.IDLE.ordinal());
+    }
+
+    @Override
+    protected EntityNavigation createNavigation(World world) {
+        return new RobotNavigation(this, world);
+    }
+
+    @Override
+    protected void fall(double height, boolean onGround, BlockState state, BlockPos pos) {
+        // Сохраняем обычный урон от падения, но не вызываем превращение грядки в землю.
+        super.fall(height, onGround, state.isOf(Blocks.FARMLAND) ? Blocks.DIRT.getDefaultState() : state, pos);
     }
 
     @Override
@@ -178,13 +198,31 @@ public final class RobotEntity extends PathAwareEntity implements NamedScreenHan
     }
 
     /** Общий бюджет поиска рабочих целей не чаще одного раза в 40 тиков. */
-    public boolean tryBeginWorkScan() {
+    public boolean tryBeginWorkScan(Identifier requester) {
         long now = getWorld().getTime();
-        if (now < nextWorkScanTick) {
+        scanRequests.entrySet().removeIf(entry -> !inventory.hasModule(entry.getKey())
+                || now - entry.getValue() > RobotConfig.WORK_SCAN_INTERVAL);
+        if (!inventory.hasModule(requester)) {
             return false;
         }
+        scanRequests.put(requester, now);
+        if (now < nextWorkScanTick || !scanRequests.keySet().iterator().next().equals(requester)) {
+            return false;
+        }
+        scanRequests.remove(requester);
         nextWorkScanTick = now + RobotConfig.WORK_SCAN_INTERVAL;
         return true;
+    }
+
+    /** Собирает добычу в хранение и запоминает непоместившийся остаток. */
+    public void collectWorkDrops(List<ItemStack> drops) {
+        for (ItemStack drop : drops) {
+            ItemStack excess = inventory.insertStorage(drop);
+            if (!excess.isEmpty()) {
+                dropStack(excess);
+                blockWorkForStorage(excess);
+            }
+        }
     }
 
     /** Останавливает производство после выпадения непоместившейся добычи. */
@@ -505,6 +543,7 @@ public final class RobotEntity extends PathAwareEntity implements NamedScreenHan
         blockedStorageDrop = ItemStack.EMPTY;
         moduleStatus = RobotStatus.WORKING;
         nextWorkScanTick = 0;
+        scanRequests.clear();
         nextStorageMessageTick = 0;
         super.readCustomDataFromNbt(nbt);
         ownerUuid = nbt.containsUuid("Owner") ? nbt.getUuid("Owner") : null;

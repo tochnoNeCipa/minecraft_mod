@@ -39,5 +39,9 @@
   "status.robohelper.chopping_tree": "Chopping a tree",
   "status.robohelper.planting_tree": "Planting a sapling",
   "status.robohelper.storage_full": "Storage full",
-  "message.robohelper.storage_full": "Your robot has no room for its drops. Free up storage space."
+  "message.robohelper.storage_full": "Your robot has no room for its drops. Free up storage space.",
+  "item.robohelper.farmer_module": "Farmer Module",
+  "status.robohelper.searching_crop": "Looking for ripe crops",
+  "status.robohelper.harvesting": "Harvesting",
+  "status.robohelper.planting_crop": "Replanting"
 }

@@ -48,6 +48,9 @@ public final class RobotConfig {
     public static final double TREE_REACH = 2.0;
     public static final double TREE_STAND_RADIUS = 1.5;
 
+    public static final int HARVEST_ENERGY_COST = 15;
+    public static final double WORK_REACH = 2.0;
+
     private RobotConfig() {
     }
 }
