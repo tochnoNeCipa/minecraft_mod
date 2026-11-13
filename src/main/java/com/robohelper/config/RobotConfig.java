@@ -33,6 +33,11 @@ public final class RobotConfig {
     public static final double RETURN_ARRIVAL_DISTANCE = 1.5;
     public static final int TELEPORT_RADIUS = 2;
 
+    public static final int MODULE_BASE_INTERVAL = 20;
+    public static final int MODULE_INTERVAL_STEP = 5;
+    public static final int MODULE_DISCOUNT_STEP = 10;
+    public static final int MODULE_PRIORITY_SCALE = 10;
+
     private RobotConfig() {
     }
 }

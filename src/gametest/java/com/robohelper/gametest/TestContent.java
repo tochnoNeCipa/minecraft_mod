@@ -19,7 +19,12 @@ public final class TestContent implements ModInitializer {
             new Identifier("robohelper_gametest", "miner"), new RobotModuleItem(
                     new Identifier("robohelper", "miner"), new Item.Settings()));
 
+    public static final net.minecraft.util.Identifier PROBE_ID = new Identifier("robohelper_gametest", "probe");
+    public static final Item PROBE = Registry.register(Registries.ITEM, PROBE_ID,
+            new RobotModuleItem(PROBE_ID, new Item.Settings()));
+
     @Override
     public void onInitialize() {
+        com.robohelper.module.ModuleRegistry.register(PROBE_ID, ProbeModule::new);
     }
 }

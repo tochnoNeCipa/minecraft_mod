@@ -29,5 +29,9 @@
   "status.robohelper.low_energy": "Мало энергии",
   "status.robohelper.returning": "Возвращаюсь в зону",
   "status.robohelper.no_modules": "Нет модулей",
-  "status.robohelper.working": "Работа"
+  "status.robohelper.working": "Работа",
+  "tooltip.robohelper.level": "Уровень: %s",
+  "tooltip.robohelper.progress": "Действия: %s / %s",
+  "tooltip.robohelper.max_level": "Максимальный уровень · действий: %s",
+  "message.robohelper.module_slots_full": "Все слоты модулей заняты"
 }

@@ -3,6 +3,9 @@ package com.robohelper.entity;
 import com.robohelper.ai.goal.FollowOwnerGoal;
 import com.robohelper.ai.goal.ReturnToZoneGoal;
 import com.robohelper.config.RobotConfig;
+import com.robohelper.module.ModuleManager;
+import com.robohelper.item.RobotModuleItem;
+import net.minecraft.entity.ai.goal.Goal;
 import com.robohelper.inventory.InventoryTransfer;
 import com.robohelper.screen.RobotScreenHandler;
 import com.robohelper.screen.RobotStatus;
@@ -54,6 +57,7 @@ public final class RobotEntity extends PathAwareEntity implements NamedScreenHan
     private int lowEnergySignalTicks;
 
     private final RobotInventory inventory = new RobotInventory(this);
+    private final ModuleManager modules = new ModuleManager(this);
     private UUID ownerUuid;
 
     public RobotEntity(EntityType<? extends RobotEntity> type, World world) {
@@ -82,12 +86,25 @@ public final class RobotEntity extends PathAwareEntity implements NamedScreenHan
     protected void initGoals() {
         goalSelector.add(0, new SwimGoal(this));
         goalSelector.add(1, new ReturnToZoneGoal(this));
-        goalSelector.add(5, new FollowOwnerGoal(this));
-        goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, RobotConfig.LOOK_RANGE));
+        goalSelector.add(5 * RobotConfig.MODULE_PRIORITY_SCALE, new FollowOwnerGoal(this));
+        goalSelector.add(6 * RobotConfig.MODULE_PRIORITY_SCALE, new LookAtEntityGoal(this, PlayerEntity.class, RobotConfig.LOOK_RANGE));
     }
 
     public RobotInventory getInventory() {
         return inventory;
+    }
+
+    /** Менеджер обеспечивает одинаковый жизненный цикл для любой профессии. */
+    public ModuleManager getModules() {
+        return modules;
+    }
+
+    public void addModuleGoal(int priority, Goal goal) {
+        goalSelector.add(priority, goal);
+    }
+
+    public void removeModuleGoal(Goal goal) {
+        goalSelector.remove(goal);
     }
 
     public UUID getOwnerUuid() {
@@ -201,6 +218,9 @@ public final class RobotEntity extends PathAwareEntity implements NamedScreenHan
 
     @Override
     public void tick() {
+        if (!getWorld().isClient && isAlive()) {
+            modules.synchronize();
+        }
         double previousX = getX();
         double previousZ = getZ();
         super.tick();
@@ -348,6 +368,25 @@ public final class RobotEntity extends PathAwareEntity implements NamedScreenHan
             }
             return ActionResult.CONSUME;
         }
+        if (held.getItem() instanceof RobotModuleItem item) {
+            if (inventory.hasModule(item.getModuleId())) {
+                player.sendMessage(Text.translatable("message.robohelper.duplicate_module"), true);
+                return ActionResult.CONSUME;
+            }
+            for (int slot = RobotInventory.FIRST_MODULE_SLOT; slot < RobotInventory.SIZE; slot++) {
+                if (inventory.getStack(slot).isEmpty()) {
+                    inventory.setStack(slot, held.copyWithCount(1));
+                    if (!player.getAbilities().creativeMode) {
+                        held.decrement(1);
+                    }
+                    modules.synchronize();
+                    playSound(SoundEvents.BLOCK_IRON_DOOR_CLOSE, 0.5F, 1.4F);
+                    return ActionResult.CONSUME;
+                }
+            }
+            player.sendMessage(Text.translatable("message.robohelper.module_slots_full"), true);
+            return ActionResult.CONSUME;
+        }
         if (inventory.isValid(RobotInventory.FUEL_SLOT, held)) {
             ItemStack fuel = inventory.getStack(RobotInventory.FUEL_SLOT);
             int space = fuel.isEmpty() ? held.getMaxCount()
@@ -379,7 +418,16 @@ public final class RobotEntity extends PathAwareEntity implements NamedScreenHan
     }
 
     @Override
+    public void remove(RemovalReason reason) {
+        if (modules != null) {
+            modules.clear();
+        }
+        super.remove(reason);
+    }
+
+    @Override
     protected void dropEquipment(DamageSource source, int lootingMultiplier, boolean allowDrops) {
+        modules.clear();
         super.dropEquipment(source, lootingMultiplier, allowDrops);
         // removeStack сразу очищает слот и исключает повторную выдачу того же предмета.
         for (int slot = 0; slot < inventory.size(); slot++) {
@@ -409,6 +457,7 @@ public final class RobotEntity extends PathAwareEntity implements NamedScreenHan
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
+        modules.clear();
         super.readCustomDataFromNbt(nbt);
         ownerUuid = nbt.containsUuid("Owner") ? nbt.getUuid("Owner") : null;
         inventory.readNbt(nbt.getCompound("Inventory"));
@@ -423,5 +472,6 @@ public final class RobotEntity extends PathAwareEntity implements NamedScreenHan
                 ? MathHelper.clamp(nbt.getInt("ZoneRadius"), 1, RobotConfig.ZONE_RADIUS) : RobotConfig.ZONE_RADIUS;
         lowEnergySignalTicks = 0;
         setPersistent();
+        modules.synchronize();
     }
 }

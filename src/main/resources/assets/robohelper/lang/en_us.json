@@ -29,5 +29,9 @@
   "status.robohelper.low_energy": "Low energy",
   "status.robohelper.returning": "Returning to zone",
   "status.robohelper.no_modules": "No modules",
-  "status.robohelper.working": "Working"
+  "status.robohelper.working": "Working",
+  "tooltip.robohelper.level": "Level: %s",
+  "tooltip.robohelper.progress": "Actions: %s / %s",
+  "tooltip.robohelper.max_level": "Maximum level · actions: %s",
+  "message.robohelper.module_slots_full": "All module slots are occupied"
 }
