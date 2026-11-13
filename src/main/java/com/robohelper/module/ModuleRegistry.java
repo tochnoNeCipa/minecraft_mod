@@ -38,5 +38,6 @@ public final class ModuleRegistry {
     public static void initialize() {
         register(LumberjackModule.ID, LumberjackModule::new);
         register(FarmerModule.ID, FarmerModule::new);
+        register(LogisticsModule.ID, LogisticsModule::new);
     }
 }

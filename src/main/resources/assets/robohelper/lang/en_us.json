@@ -43,5 +43,10 @@
   "item.robohelper.farmer_module": "Farmer Module",
   "status.robohelper.searching_crop": "Looking for ripe crops",
   "status.robohelper.harvesting": "Harvesting",
-  "status.robohelper.planting_crop": "Replanting"
+  "status.robohelper.planting_crop": "Replanting",
+  "item.robohelper.logistics_module": "Logistics Module",
+  "status.robohelper.searching_container": "Looking for storage",
+  "status.robohelper.unloading": "Unloading cargo",
+  "status.robohelper.no_container": "No storage available",
+  "message.robohelper.no_container": "No reachable chest or barrel has room for the cargo in the work zone."
 }

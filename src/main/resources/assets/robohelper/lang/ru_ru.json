@@ -43,5 +43,10 @@
   "item.robohelper.farmer_module": "Модуль «Фермер»",
   "status.robohelper.searching_crop": "Ищу спелый урожай",
   "status.robohelper.harvesting": "Собираю урожай",
-  "status.robohelper.planting_crop": "Пересаживаю культуру"
+  "status.robohelper.planting_crop": "Пересаживаю культуру",
+  "item.robohelper.logistics_module": "Модуль «Логист»",
+  "status.robohelper.searching_container": "Ищу контейнер",
+  "status.robohelper.unloading": "Выгружаю добычу",
+  "status.robohelper.no_container": "Нет доступного контейнера",
+  "message.robohelper.no_container": "Нет доступного сундука или бочки с местом для груза в рабочей зоне."
 }

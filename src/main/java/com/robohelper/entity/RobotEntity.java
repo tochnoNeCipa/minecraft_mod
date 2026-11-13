@@ -68,6 +68,8 @@ public final class RobotEntity extends PathAwareEntity implements NamedScreenHan
     private final ModuleManager modules = new ModuleManager(this);
     private ItemStack blockedStorageDrop = ItemStack.EMPTY;
     private RobotStatus moduleStatus = RobotStatus.WORKING;
+    private int moduleStatusPriority = 4;
+    private long moduleStatusTick = -1;
     private long nextWorkScanTick;
     private final Map<Identifier, Long> scanRequests = new LinkedHashMap<>();
     private long nextStorageMessageTick;
@@ -240,7 +242,36 @@ public final class RobotEntity extends PathAwareEntity implements NamedScreenHan
 
     /** Короткое состояние текущего рабочего модуля для GUI. */
     public void setModuleStatus(RobotStatus status) {
-        moduleStatus = status;
+        setModuleStatus(status, 4);
+    }
+
+    /** Состояние более приоритетной профессии не затирается поиском производства в тот же тик. */
+    public void setModuleStatus(RobotStatus status, int priority) {
+        long now = getWorld().getTime();
+        if (moduleStatusTick != now || priority <= moduleStatusPriority) {
+            moduleStatus = status;
+            moduleStatusPriority = priority;
+            moduleStatusTick = now;
+        }
+    }
+
+    /** Снятие профессии очищает её прежнее состояние. */
+    public void clearModuleStatus() {
+        moduleStatus = RobotStatus.WORKING;
+        moduleStatusPriority = 4;
+        moduleStatusTick = -1;
+    }
+
+    /** Общий предел сообщений о заполнении и отсутствии контейнера — раз в 30 секунд. */
+    public void notifyWorkOwner(String translationKey) {
+        if (getWorld().isClient || getWorld().getTime() < nextStorageMessageTick) {
+            return;
+        }
+        PlayerEntity owner = getOwnerPlayer();
+        if (owner != null) {
+            owner.sendMessage(Text.translatable(translationKey), false);
+            nextStorageMessageTick = getWorld().getTime() + RobotConfig.STORAGE_MESSAGE_INTERVAL;
+        }
     }
 
     /** До первого тика центр берётся из позиции появления. */
@@ -303,12 +334,8 @@ public final class RobotEntity extends PathAwareEntity implements NamedScreenHan
             zoneCenter = getBlockPos().toImmutable();
         }
         refuel();
-        if (getMode() == RobotMode.WORK && isStorageBlocked() && getWorld().getTime() >= nextStorageMessageTick) {
-            PlayerEntity owner = getOwnerPlayer();
-            if (owner != null) {
-                owner.sendMessage(Text.translatable("message.robohelper.storage_full"), false);
-            }
-            nextStorageMessageTick = getWorld().getTime() + RobotConfig.STORAGE_MESSAGE_INTERVAL;
+        if (getMode() == RobotMode.WORK && isStorageBlocked()) {
+            notifyWorkOwner("message.robohelper.storage_full");
         }
         if (getMode() == RobotMode.WORK) {
             double dx = getX() - previousX;
@@ -415,7 +442,7 @@ public final class RobotEntity extends PathAwareEntity implements NamedScreenHan
         if (requiresZoneReturn()) {
             return RobotStatus.RETURNING;
         }
-        if (isStorageBlocked()) {
+        if (isStorageBlocked() && moduleStatusPriority > 3) {
             return RobotStatus.STORAGE_FULL;
         }
         for (int slot = RobotInventory.FIRST_MODULE_SLOT; slot < inventory.size(); slot++) {
@@ -541,7 +568,7 @@ public final class RobotEntity extends PathAwareEntity implements NamedScreenHan
     public void readCustomDataFromNbt(NbtCompound nbt) {
         modules.clear();
         blockedStorageDrop = ItemStack.EMPTY;
-        moduleStatus = RobotStatus.WORKING;
+        clearModuleStatus();
         nextWorkScanTick = 0;
         scanRequests.clear();
         nextStorageMessageTick = 0;

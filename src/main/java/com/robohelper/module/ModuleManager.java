@@ -68,6 +68,7 @@ public final class ModuleManager {
         if (installed != null) {
             installed.goals.forEach(robot::removeModuleGoal);
             installed.module.onRemove(robot);
+            robot.clearModuleStatus();
         }
     }
 

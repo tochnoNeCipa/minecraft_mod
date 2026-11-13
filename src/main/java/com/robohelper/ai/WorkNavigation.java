@@ -15,6 +15,7 @@ public final class WorkNavigation {
     private WorkNavigation() {
     }
 
+    /** Выбирает свободный соседний узел и проверяет весь путь зоной. */
     @Nullable
     public static Path findPathNear(RobotEntity robot, BlockPos target) {
         Set<BlockPos> targets = new HashSet<>();
