@@ -12,7 +12,8 @@
       "com.robohelper.gametest.RobotTests",
       "com.robohelper.gametest.ModeEnergyTests",
       "com.robohelper.gametest.ScreenTests",
-      "com.robohelper.gametest.ModuleTests"
+      "com.robohelper.gametest.ModuleTests",
+      "com.robohelper.gametest.LumberjackTests"
     ]
   },
   "depends": {

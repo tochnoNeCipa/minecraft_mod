@@ -38,6 +38,16 @@ public final class RobotConfig {
     public static final int MODULE_DISCOUNT_STEP = 10;
     public static final int MODULE_PRIORITY_SCALE = 10;
 
+    public static final int MAX_TREE_BLOCKS = 128;
+    public static final int WORK_SCAN_INTERVAL = 40;
+    public static final int WORK_PATH_TIMEOUT = 200;
+    public static final int UNREACHABLE_TREE_TICKS = 6000;
+    public static final int STORAGE_MESSAGE_INTERVAL = 600;
+    public static final int CHOP_ENERGY_COST = 20;
+    public static final int PLANT_ENERGY_COST = 10;
+    public static final double TREE_REACH = 2.0;
+    public static final double TREE_STAND_RADIUS = 1.5;
+
     private RobotConfig() {
     }
 }

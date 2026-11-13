@@ -8,5 +8,9 @@ public enum RobotStatus {
     LOW_ENERGY,
     RETURNING,
     NO_MODULES,
-    WORKING
+    WORKING,
+    SEARCHING_TREE,
+    CHOPPING_TREE,
+    PLANTING_TREE,
+    STORAGE_FULL
 }

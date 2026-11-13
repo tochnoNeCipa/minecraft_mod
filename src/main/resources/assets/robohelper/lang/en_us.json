@@ -33,5 +33,11 @@
   "tooltip.robohelper.level": "Level: %s",
   "tooltip.robohelper.progress": "Actions: %s / %s",
   "tooltip.robohelper.max_level": "Maximum level · actions: %s",
-  "message.robohelper.module_slots_full": "All module slots are occupied"
+  "message.robohelper.module_slots_full": "All module slots are occupied",
+  "item.robohelper.lumberjack_module": "Lumberjack Module",
+  "status.robohelper.searching_tree": "Looking for a tree",
+  "status.robohelper.chopping_tree": "Chopping a tree",
+  "status.robohelper.planting_tree": "Planting a sapling",
+  "status.robohelper.storage_full": "Storage full",
+  "message.robohelper.storage_full": "Your robot has no room for its drops. Free up storage space."
 }

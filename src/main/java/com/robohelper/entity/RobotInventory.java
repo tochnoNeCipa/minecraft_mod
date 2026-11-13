@@ -122,6 +122,26 @@ public final class RobotInventory implements Inventory {
         markDirty();
     }
 
+    /** Проверяет вместимость без изменения слотов, включая место в совместимых стопках. */
+    public boolean canAcceptStorage(ItemStack stack) {
+        if (stack.isEmpty()) {
+            return true;
+        }
+        int available = 0;
+        for (int slot = 0; slot < RobotConfig.STORAGE_SLOTS; slot++) {
+            ItemStack existing = stacks.get(slot);
+            if (existing.isEmpty()) {
+                available += Math.min(getMaxCountPerStack(), stack.getMaxCount());
+            } else if (ItemStack.canCombine(existing, stack)) {
+                available += Math.max(0, Math.min(getMaxCountPerStack(), stack.getMaxCount()) - existing.getCount());
+            }
+            if (available >= stack.getCount()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /** Помещает предметы только в 18 слотов хранения, возвращая непоместившуюся копию. */
     public ItemStack insertStorage(ItemStack stack) {
         return InventoryTransfer.insert(this, stack, 0, RobotConfig.STORAGE_SLOTS);

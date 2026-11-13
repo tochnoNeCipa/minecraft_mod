@@ -2,6 +2,8 @@ package com.robohelper.registry;
 
 import com.robohelper.RoboHelper;
 import com.robohelper.item.RobotSpawnItem;
+import com.robohelper.item.RobotModuleItem;
+import com.robohelper.module.LumberjackModule;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -16,11 +18,15 @@ public final class ModItems {
     public static final Item ROBOT_BODY = Registry.register(Registries.ITEM,
             new Identifier(RoboHelper.MOD_ID, "robot_body"), new RobotSpawnItem(new Item.Settings()));
 
+    public static final Item LUMBERJACK_MODULE = Registry.register(Registries.ITEM,
+            new Identifier(RoboHelper.MOD_ID, "lumberjack_module"),
+            new RobotModuleItem(LumberjackModule.ID, new Item.Settings()));
+
     public static final ItemGroup GROUP = Registry.register(Registries.ITEM_GROUP,
             new Identifier(RoboHelper.MOD_ID, "main"), FabricItemGroup.builder()
                     .displayName(Text.translatable("itemGroup.robohelper"))
                     .icon(() -> new ItemStack(ROBOT_BODY))
-                    .entries((context, entries) -> entries.add(ROBOT_BODY))
+                    .entries((context, entries) -> { entries.add(ROBOT_BODY); entries.add(LUMBERJACK_MODULE); })
                     .build());
 
     private ModItems() {

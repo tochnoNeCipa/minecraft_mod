@@ -58,6 +58,10 @@ public final class RobotEntity extends PathAwareEntity implements NamedScreenHan
 
     private final RobotInventory inventory = new RobotInventory(this);
     private final ModuleManager modules = new ModuleManager(this);
+    private ItemStack blockedStorageDrop = ItemStack.EMPTY;
+    private RobotStatus moduleStatus = RobotStatus.WORKING;
+    private long nextWorkScanTick;
+    private long nextStorageMessageTick;
     private UUID ownerUuid;
 
     public RobotEntity(EntityType<? extends RobotEntity> type, World world) {
@@ -99,10 +103,12 @@ public final class RobotEntity extends PathAwareEntity implements NamedScreenHan
         return modules;
     }
 
+    /** Подключает цель через общий менеджер профессий. */
     public void addModuleGoal(int priority, Goal goal) {
         goalSelector.add(priority, goal);
     }
 
+    /** Снимает цель и останавливает её текущее действие. */
     public void removeModuleGoal(Goal goal) {
         goalSelector.remove(goal);
     }
@@ -171,6 +177,34 @@ public final class RobotEntity extends PathAwareEntity implements NamedScreenHan
         return canWork() && !requiresZoneReturn();
     }
 
+    /** Общий бюджет поиска рабочих целей не чаще одного раза в 40 тиков. */
+    public boolean tryBeginWorkScan() {
+        long now = getWorld().getTime();
+        if (now < nextWorkScanTick) {
+            return false;
+        }
+        nextWorkScanTick = now + RobotConfig.WORK_SCAN_INTERVAL;
+        return true;
+    }
+
+    /** Останавливает производство после выпадения непоместившейся добычи. */
+    public void blockWorkForStorage(ItemStack excess) {
+        blockedStorageDrop = excess.copy();
+    }
+
+    /** Освобождённое место автоматически снимает блокировку без смены режима. */
+    public boolean isStorageBlocked() {
+        if (!blockedStorageDrop.isEmpty() && inventory.canAcceptStorage(blockedStorageDrop)) {
+            blockedStorageDrop = ItemStack.EMPTY;
+        }
+        return !blockedStorageDrop.isEmpty();
+    }
+
+    /** Короткое состояние текущего рабочего модуля для GUI. */
+    public void setModuleStatus(RobotStatus status) {
+        moduleStatus = status;
+    }
+
     /** До первого тика центр берётся из позиции появления. */
     public BlockPos getZoneCenter() {
         return zoneCenter == null ? getBlockPos() : zoneCenter;
@@ -231,6 +265,13 @@ public final class RobotEntity extends PathAwareEntity implements NamedScreenHan
             zoneCenter = getBlockPos().toImmutable();
         }
         refuel();
+        if (getMode() == RobotMode.WORK && isStorageBlocked() && getWorld().getTime() >= nextStorageMessageTick) {
+            PlayerEntity owner = getOwnerPlayer();
+            if (owner != null) {
+                owner.sendMessage(Text.translatable("message.robohelper.storage_full"), false);
+            }
+            nextStorageMessageTick = getWorld().getTime() + RobotConfig.STORAGE_MESSAGE_INTERVAL;
+        }
         if (getMode() == RobotMode.WORK) {
             double dx = getX() - previousX;
             double dz = getZ() - previousZ;
@@ -336,9 +377,12 @@ public final class RobotEntity extends PathAwareEntity implements NamedScreenHan
         if (requiresZoneReturn()) {
             return RobotStatus.RETURNING;
         }
+        if (isStorageBlocked()) {
+            return RobotStatus.STORAGE_FULL;
+        }
         for (int slot = RobotInventory.FIRST_MODULE_SLOT; slot < inventory.size(); slot++) {
             if (!inventory.getStack(slot).isEmpty()) {
-                return RobotStatus.WORKING;
+                return moduleStatus;
             }
         }
         return RobotStatus.NO_MODULES;
@@ -458,6 +502,10 @@ public final class RobotEntity extends PathAwareEntity implements NamedScreenHan
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         modules.clear();
+        blockedStorageDrop = ItemStack.EMPTY;
+        moduleStatus = RobotStatus.WORKING;
+        nextWorkScanTick = 0;
+        nextStorageMessageTick = 0;
         super.readCustomDataFromNbt(nbt);
         ownerUuid = nbt.containsUuid("Owner") ? nbt.getUuid("Owner") : null;
         inventory.readNbt(nbt.getCompound("Inventory"));

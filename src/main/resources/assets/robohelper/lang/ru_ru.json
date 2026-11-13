@@ -33,5 +33,11 @@
   "tooltip.robohelper.level": "Уровень: %s",
   "tooltip.robohelper.progress": "Действия: %s / %s",
   "tooltip.robohelper.max_level": "Максимальный уровень · действий: %s",
-  "message.robohelper.module_slots_full": "Все слоты модулей заняты"
+  "message.robohelper.module_slots_full": "Все слоты модулей заняты",
+  "item.robohelper.lumberjack_module": "Модуль «Лесоруб»",
+  "status.robohelper.searching_tree": "Ищу дерево",
+  "status.robohelper.chopping_tree": "Рублю дерево",
+  "status.robohelper.planting_tree": "Сажаю саженец",
+  "status.robohelper.storage_full": "Хранилище заполнено",
+  "message.robohelper.storage_full": "У робота нет места для добычи. Освободите хранилище."
 }

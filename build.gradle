@@ -62,3 +62,11 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
     options.release = 17
 }
+
+// Только автоматически созданный тестовый мир; игровой run/world не затрагивается.
+tasks.named('runGametest').configure {
+    doFirst {
+        delete layout.buildDirectory.dir('gametest/world')
+        delete layout.buildDirectory.file('gametest-results.xml')
+    }
+}

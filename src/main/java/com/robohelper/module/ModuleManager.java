@@ -19,6 +19,7 @@ public final class ModuleManager {
     private final RobotEntity robot;
     private final Map<Integer, Installed> active = new HashMap<>();
 
+    /** Создаёт менеджер для одной сущности. */
     public ModuleManager(RobotEntity robot) {
         this.robot = robot;
     }
@@ -70,6 +71,7 @@ public final class ModuleManager {
         }
     }
 
+    /** Останавливает все цели и вызывает обработчики снятия. */
     public void clear() {
         for (int slot : new ArrayList<>(active.keySet())) {
             remove(slot);
@@ -89,6 +91,7 @@ public final class ModuleManager {
     }
 
     @Nullable
+    /** Возвращает активный экземпляр профессии либо null. */
     public RobotModule getModule(net.minecraft.util.Identifier id) {
         return active.values().stream().map(Installed::module)
                 .filter(module -> module.getId().equals(id)).findFirst().orElse(null);

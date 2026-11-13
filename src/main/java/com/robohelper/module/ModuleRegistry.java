@@ -13,6 +13,7 @@ public final class ModuleRegistry {
     private ModuleRegistry() {
     }
 
+    /** Регистрирует фабрику отдельного поведения; дубликат id считается ошибкой. */
     public static void register(Identifier id, Supplier<? extends RobotModule> factory) {
         if (FACTORIES.putIfAbsent(id, factory) != null) {
             throw new IllegalArgumentException("Duplicate robot module: " + id);
@@ -20,6 +21,7 @@ public final class ModuleRegistry {
     }
 
     @Nullable
+    /** Создаёт поведение по id либо возвращает null для неизвестной профессии. */
     public static RobotModule create(Identifier id) {
         Supplier<? extends RobotModule> factory = FACTORIES.get(id);
         if (factory == null) {
@@ -32,6 +34,8 @@ public final class ModuleRegistry {
         return module;
     }
 
+    /** Регистрирует встроенные профессии при запуске мода. */
     public static void initialize() {
+        register(LumberjackModule.ID, LumberjackModule::new);
     }
 }
