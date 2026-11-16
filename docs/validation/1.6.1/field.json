@@ -1,0 +1,12 @@
+{
+  "size": "9x9",
+  "actions": 160,
+  "walkingEnergy": 6,
+  "endingLevel": 2,
+  "ticks": 3182,
+  "totalEnergy": 1946,
+  "waterCells": 1,
+  "startingLevel": 1,
+  "actionEnergy": 1940,
+  "crops": 80
+}

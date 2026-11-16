@@ -1,0 +1,8 @@
+{
+  "restart": true,
+  "passed": true,
+  "benchmarkScenarios": 8,
+  "networkClients": 2,
+  "chunks": true,
+  "performanceThresholdsMet": true
+}

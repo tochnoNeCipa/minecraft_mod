@@ -1,0 +1,212 @@
+[
+  {
+    "level": 1,
+    "cycleTicks": 123,
+    "trial": 1,
+    "cycleEnergy": 130,
+    "cutTicksFromJobStart": 103
+  },
+  {
+    "level": 1,
+    "cycleTicks": 124,
+    "trial": 2,
+    "cycleEnergy": 130,
+    "cutTicksFromJobStart": 104
+  },
+  {
+    "level": 1,
+    "cycleTicks": 124,
+    "trial": 3,
+    "cycleEnergy": 130,
+    "cutTicksFromJobStart": 104
+  },
+  {
+    "level": 1,
+    "cycleTicks": 124,
+    "trial": 4,
+    "cycleEnergy": 130,
+    "cutTicksFromJobStart": 104
+  },
+  {
+    "level": 1,
+    "cycleTicks": 124,
+    "trial": 5,
+    "cycleEnergy": 130,
+    "cutTicksFromJobStart": 104
+  },
+  {
+    "level": 1,
+    "cycleTicks": 123,
+    "trial": 6,
+    "cycleEnergy": 130,
+    "cutTicksFromJobStart": 103
+  },
+  {
+    "level": 1,
+    "cycleTicks": 124,
+    "trial": 7,
+    "cycleEnergy": 130,
+    "cutTicksFromJobStart": 104
+  },
+  {
+    "level": 1,
+    "cycleTicks": 124,
+    "trial": 8,
+    "cycleEnergy": 130,
+    "cutTicksFromJobStart": 104
+  },
+  {
+    "level": 1,
+    "cycleTicks": 124,
+    "trial": 9,
+    "cycleEnergy": 130,
+    "cutTicksFromJobStart": 104
+  },
+  {
+    "level": 1,
+    "cycleTicks": 123,
+    "trial": 10,
+    "cycleEnergy": 130,
+    "cutTicksFromJobStart": 103
+  },
+  {
+    "level": 2,
+    "cycleTicks": 94,
+    "trial": 1,
+    "cycleEnergy": 117,
+    "cutTicksFromJobStart": 79
+  },
+  {
+    "level": 2,
+    "cycleTicks": 94,
+    "trial": 2,
+    "cycleEnergy": 117,
+    "cutTicksFromJobStart": 79
+  },
+  {
+    "level": 2,
+    "cycleTicks": 94,
+    "trial": 3,
+    "cycleEnergy": 117,
+    "cutTicksFromJobStart": 79
+  },
+  {
+    "level": 2,
+    "cycleTicks": 94,
+    "trial": 4,
+    "cycleEnergy": 117,
+    "cutTicksFromJobStart": 79
+  },
+  {
+    "level": 2,
+    "cycleTicks": 94,
+    "trial": 5,
+    "cycleEnergy": 117,
+    "cutTicksFromJobStart": 79
+  },
+  {
+    "level": 2,
+    "cycleTicks": 94,
+    "trial": 6,
+    "cycleEnergy": 117,
+    "cutTicksFromJobStart": 79
+  },
+  {
+    "level": 2,
+    "cycleTicks": 94,
+    "trial": 7,
+    "cycleEnergy": 117,
+    "cutTicksFromJobStart": 79
+  },
+  {
+    "level": 2,
+    "cycleTicks": 94,
+    "trial": 8,
+    "cycleEnergy": 117,
+    "cutTicksFromJobStart": 79
+  },
+  {
+    "level": 2,
+    "cycleTicks": 94,
+    "trial": 9,
+    "cycleEnergy": 117,
+    "cutTicksFromJobStart": 79
+  },
+  {
+    "level": 2,
+    "cycleTicks": 94,
+    "trial": 10,
+    "cycleEnergy": 117,
+    "cutTicksFromJobStart": 79
+  },
+  {
+    "level": 3,
+    "cycleTicks": 64,
+    "trial": 1,
+    "cycleEnergy": 104,
+    "cutTicksFromJobStart": 54
+  },
+  {
+    "level": 3,
+    "cycleTicks": 64,
+    "trial": 2,
+    "cycleEnergy": 104,
+    "cutTicksFromJobStart": 54
+  },
+  {
+    "level": 3,
+    "cycleTicks": 64,
+    "trial": 3,
+    "cycleEnergy": 104,
+    "cutTicksFromJobStart": 54
+  },
+  {
+    "level": 3,
+    "cycleTicks": 64,
+    "trial": 4,
+    "cycleEnergy": 104,
+    "cutTicksFromJobStart": 54
+  },
+  {
+    "level": 3,
+    "cycleTicks": 64,
+    "trial": 5,
+    "cycleEnergy": 104,
+    "cutTicksFromJobStart": 54
+  },
+  {
+    "level": 3,
+    "cycleTicks": 64,
+    "trial": 6,
+    "cycleEnergy": 104,
+    "cutTicksFromJobStart": 54
+  },
+  {
+    "level": 3,
+    "cycleTicks": 64,
+    "trial": 7,
+    "cycleEnergy": 104,
+    "cutTicksFromJobStart": 54
+  },
+  {
+    "level": 3,
+    "cycleTicks": 64,
+    "trial": 8,
+    "cycleEnergy": 104,
+    "cutTicksFromJobStart": 54
+  },
+  {
+    "level": 3,
+    "cycleTicks": 64,
+    "trial": 9,
+    "cycleEnergy": 104,
+    "cutTicksFromJobStart": 54
+  },
+  {
+    "level": 3,
+    "cycleTicks": 64,
+    "trial": 10,
+    "cycleEnergy": 104,
+    "cutTicksFromJobStart": 54
+  }
+]

@@ -1,0 +1,105 @@
+{
+  "os": "Linux",
+  "processors": 4,
+  "prewarmTicks": 800,
+  "results": [
+    {
+      "scenario": "empty-search-lumberjack+farmer+logistics",
+      "robots": 1,
+      "samples": 240,
+      "warmupTicks": 60,
+      "meanTotalMs": 0.24489077916666666,
+      "meanPerRobotMs": 0.24489077916666666,
+      "p95TotalMs": 0.692504,
+      "maxTotalMs": 2.344266,
+      "meanServerTickMs": 1.0253612,
+      "requirementMet": true
+    },
+    {
+      "scenario": "empty-search-lumberjack+farmer+logistics",
+      "robots": 3,
+      "samples": 240,
+      "warmupTicks": 60,
+      "meanTotalMs": 0.3743729666666667,
+      "meanPerRobotMs": 0.1247909888888889,
+      "p95TotalMs": 1.290446,
+      "maxTotalMs": 3.590117,
+      "meanServerTickMs": 1.4371081666666667,
+      "requirementMet": true
+    },
+    {
+      "scenario": "empty-search-lumberjack+farmer+logistics",
+      "robots": 5,
+      "samples": 240,
+      "warmupTicks": 60,
+      "meanTotalMs": 0.41694034583333334,
+      "meanPerRobotMs": 0.08338806916666666,
+      "p95TotalMs": 1.563298,
+      "maxTotalMs": 3.867564,
+      "meanServerTickMs": 1.3269195708333332,
+      "requirementMet": true
+    },
+    {
+      "scenario": "empty-search-lumberjack+farmer+logistics",
+      "robots": 10,
+      "samples": 240,
+      "warmupTicks": 60,
+      "meanTotalMs": 0.6669473625,
+      "meanPerRobotMs": 0.06669473625,
+      "p95TotalMs": 3.049538,
+      "maxTotalMs": 6.13321,
+      "meanServerTickMs": 1.4567437374999999,
+      "requirementMet": true
+    },
+    {
+      "scenario": "mining+guard+logistics",
+      "robots": 1,
+      "samples": 240,
+      "warmupTicks": 60,
+      "meanTotalMs": 0.19819262083333333,
+      "meanPerRobotMs": 0.19819262083333333,
+      "p95TotalMs": 0.464976,
+      "maxTotalMs": 8.872319,
+      "meanServerTickMs": 0.9993990708333332,
+      "requirementMet": true
+    },
+    {
+      "scenario": "mining+guard+logistics",
+      "robots": 3,
+      "samples": 240,
+      "warmupTicks": 60,
+      "meanTotalMs": 0.3033310791666667,
+      "meanPerRobotMs": 0.10111035972222222,
+      "p95TotalMs": 0.822336,
+      "maxTotalMs": 4.691668,
+      "meanServerTickMs": 1.2618630499999999,
+      "requirementMet": true
+    },
+    {
+      "scenario": "mining+guard+logistics",
+      "robots": 5,
+      "samples": 240,
+      "warmupTicks": 60,
+      "meanTotalMs": 0.43348784166666665,
+      "meanPerRobotMs": 0.08669756833333334,
+      "p95TotalMs": 1.19724,
+      "maxTotalMs": 9.921432,
+      "meanServerTickMs": 1.4833125208333333,
+      "requirementMet": true
+    },
+    {
+      "scenario": "mining+guard+logistics",
+      "robots": 10,
+      "samples": 240,
+      "warmupTicks": 60,
+      "meanTotalMs": 0.4623571416666667,
+      "meanPerRobotMs": 0.04623571416666667,
+      "p95TotalMs": 1.36443,
+      "maxTotalMs": 2.509682,
+      "meanServerTickMs": 1.4923196333333335,
+      "requirementMet": true
+    }
+  ],
+  "profile": "complete RobotEntity.tick including vanilla mob/navigation",
+  "java": "17.0.20.1"
+}

@@ -1,0 +1,7 @@
+{
+  "savedFields": "owner,health,energy,mode,zone,direction,command,all-slots,NBT,partial-tunnel",
+  "itemCount": 24,
+  "passed": true,
+  "blocksMined": 12,
+  "robots": 2
+}

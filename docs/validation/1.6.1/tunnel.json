@@ -1,0 +1,29 @@
+[
+  {
+    "level": 1,
+    "actionEnergy": 750,
+    "walkingEnergy": 3,
+    "length": 15,
+    "blocks": 30,
+    "ticks": 590,
+    "totalEnergy": 753
+  },
+  {
+    "level": 2,
+    "actionEnergy": 690,
+    "walkingEnergy": 3,
+    "length": 15,
+    "blocks": 30,
+    "ticks": 445,
+    "totalEnergy": 693
+  },
+  {
+    "level": 3,
+    "actionEnergy": 600,
+    "walkingEnergy": 3,
+    "length": 15,
+    "blocks": 30,
+    "ticks": 300,
+    "totalEnergy": 603
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "version": "1.6.1",
+  "testedSourceCommit": "00c564d9ac29eb65d20259334fe397d0fab0317d",
+  "jar": "robohelper-1.6.1.jar",
+  "sha256": "45467671db36f3c532810da8e60b2f3526c97dfbbbc6ef0307dc4ac45f3a6b78",
+  "serverTests": 113,
+  "networkClients": 2,
+  "note": "Evidence generated from committed acceptance code; documentation commit follows."
+}

@@ -1,0 +1,17 @@
+{
+  "checks": [
+    "ReleaseOwner:buttons",
+    "ReleaseOther:fuel-rejected",
+    "ReleaseOther:foreign-denied",
+    "ReleaseOwner:fuel-rejected",
+    "ReleaseOther:buttons",
+    "ReleaseOwner:foreign-denied",
+    "ReleaseOther:gui-open",
+    "ReleaseOther:done",
+    "ReleaseOwner:miner-warning",
+    "ReleaseOwner:gui-open",
+    "ReleaseOwner:done"
+  ],
+  "clients": 2,
+  "passed": true
+}
