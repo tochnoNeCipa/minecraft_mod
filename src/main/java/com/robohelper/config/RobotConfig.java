@@ -55,6 +55,12 @@ public final class RobotConfig {
     public static final int PLANTING_RESERVE = 64;
     public static final int TRANSFER_ENERGY_COST = 5;
 
+    public static final int ATTACK_ENERGY_COST = 15;
+    public static final double GUARD_RANGE = 10.0;
+    public static final java.util.Set<net.minecraft.entity.EntityType<?>> GUARD_NEUTRAL_TYPES = java.util.Set.of(
+            net.minecraft.entity.EntityType.ENDERMAN, net.minecraft.entity.EntityType.ZOMBIFIED_PIGLIN,
+            net.minecraft.entity.EntityType.PIGLIN);
+
     public static final int MINE_ENERGY_COST = 25;
     public static final int MINER_MAX_DROP = 3;
     public static final double MINER_ARRIVAL_DISTANCE = 0.6;

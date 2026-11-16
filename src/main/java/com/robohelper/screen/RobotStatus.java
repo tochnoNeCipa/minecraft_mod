@@ -21,5 +21,6 @@ public enum RobotStatus {
     NO_CONTAINER,
     MINING,
     MINING_BLOCKED,
-    TUNNEL_COMPLETE
+    TUNNEL_COMPLETE,
+    GUARDING
 }

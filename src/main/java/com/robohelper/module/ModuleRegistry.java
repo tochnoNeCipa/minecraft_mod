@@ -40,5 +40,6 @@ public final class ModuleRegistry {
         register(FarmerModule.ID, FarmerModule::new);
         register(LogisticsModule.ID, LogisticsModule::new);
         register(MinerModule.ID, MinerModule::new);
+        register(GuardModule.ID, GuardModule::new);
     }
 }

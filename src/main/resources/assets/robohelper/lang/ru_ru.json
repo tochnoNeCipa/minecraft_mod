@@ -56,5 +56,7 @@
   "message.robohelper.miner_protected": "Шахтёр остановлен: впереди защищённый блок или контейнер.",
   "message.robohelper.miner_liquid": "Шахтёр остановлен: рядом с тоннелем жидкость.",
   "message.robohelper.miner_drop": "Шахтёр остановлен: впереди обрыв глубже трёх блоков.",
-  "message.robohelper.miner_unloaded": "Шахтёр ожидает загрузки соседнего чанка."
+  "message.robohelper.miner_unloaded": "Шахтёр ожидает загрузки соседнего чанка.",
+  "item.robohelper.guard_module": "Модуль «Охранник»",
+  "status.robohelper.guarding": "Защищаю зону"
 }

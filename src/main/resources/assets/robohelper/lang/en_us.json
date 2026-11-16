@@ -56,5 +56,7 @@
   "message.robohelper.miner_protected": "Miner stopped: protected block or container ahead.",
   "message.robohelper.miner_liquid": "Miner stopped: liquid next to the tunnel.",
   "message.robohelper.miner_drop": "Miner stopped: drop deeper than three blocks ahead.",
-  "message.robohelper.miner_unloaded": "Miner is waiting for the neighboring chunk to load."
+  "message.robohelper.miner_unloaded": "Miner is waiting for the neighboring chunk to load.",
+  "item.robohelper.guard_module": "Guard module",
+  "status.robohelper.guarding": "Defending the area"
 }
