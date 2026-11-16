@@ -8,3 +8,7 @@ runServer/
 *.iml
 .vscode/
 .DS_Store
+
+# Python verification tools
+__pycache__/
+*.pyc

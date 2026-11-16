@@ -33,3 +33,10 @@ jobs:
           name: gametest-results-${{ steps.version.outputs.value }}
           path: build/gametest-results.xml
           if-no-files-found: warn
+      - name: Upload balance measurements
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: balance-results-${{ steps.version.outputs.value }}
+          path: build/balance-results/*.json
+          if-no-files-found: warn

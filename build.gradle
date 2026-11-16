@@ -68,5 +68,11 @@ tasks.named('runGametest').configure {
     doFirst {
         delete layout.buildDirectory.dir('gametest/world')
         delete layout.buildDirectory.file('gametest-results.xml')
+        delete layout.buildDirectory.dir('balance-results')
     }
+}
+
+// Deliberately opt-in: acceptance worlds and helpers stay outside normal game/test runs.
+if (project.hasProperty('releaseChecks')) {
+    apply from: 'gradle/release-checks.gradle'
 }

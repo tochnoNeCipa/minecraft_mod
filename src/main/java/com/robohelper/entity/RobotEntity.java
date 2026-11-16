@@ -322,6 +322,19 @@ public final class RobotEntity extends PathAwareEntity implements NamedScreenHan
 
     @Override
     public void tick() {
+        if (!com.robohelper.debug.RobotTimings.ENABLED || getWorld().isClient) {
+            tickRobot();
+            return;
+        }
+        long started = System.nanoTime();
+        try {
+            tickRobot();
+        } finally {
+            com.robohelper.debug.RobotTimings.record(System.nanoTime() - started);
+        }
+    }
+
+    private void tickRobot() {
         if (!getWorld().isClient && isAlive()) {
             modules.synchronize();
         }

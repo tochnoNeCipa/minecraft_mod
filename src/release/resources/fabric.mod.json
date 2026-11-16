@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "id": "robohelper_release",
+  "version": "1.0.0",
+  "name": "RoboHelper release acceptance harness (development only)",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["com.robohelper.release.ReleaseServer"],
+    "client": ["com.robohelper.release.ReleaseClient"]
+  },
+  "depends": {"robohelper": "*", "fabric-api": "*"}
+}

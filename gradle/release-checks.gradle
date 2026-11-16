@@ -1,0 +1,31 @@
+// Opt-in integration harness; never packaged into the public mod JAR.
+sourceSets {
+    release {
+        compileClasspath += sourceSets.client.compileClasspath + sourceSets.main.output + sourceSets.client.output
+        runtimeClasspath += sourceSets.client.runtimeClasspath + sourceSets.main.output + sourceSets.client.output
+    }
+}
+loom {
+    mods {
+        robohelper_release { sourceSet sourceSets.release }
+    }
+    runs {
+        releaseServer {
+            server()
+            source sourceSets.release
+            runDir 'build/release-server'
+            vmArg '-Drobohelper.profile=true'
+        }
+        releaseClient {
+            client()
+            source sourceSets.release
+            runDir 'build/release-client'
+        }
+    }
+}
+tasks.register('writeReleaseClasspath') {
+    dependsOn 'releaseClasses', 'configureClientLaunch'
+    doLast {
+        layout.buildDirectory.file('release-classpath.txt').get().asFile.text = sourceSets.release.runtimeClasspath.asPath
+    }
+}
