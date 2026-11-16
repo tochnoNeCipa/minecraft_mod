@@ -12,7 +12,7 @@
   "gui.robohelper.unload": "Выгрузить",
   "gui.robohelper.zone_here": "Зона здесь",
   "gui.robohelper.direction": "Направление",
-  "gui.robohelper.direction_hint": "Сейчас: %s. Нажмите, чтобы выбрать направление взгляда робота.",
+  "gui.robohelper.direction_hint": "Сейчас: %s. Начать новый тоннель по направлению взгляда робота.",
   "gui.robohelper.miner_required": "Нужен модуль «Шахтёр»",
   "gui.robohelper.energy": "Энергия: %s / %s",
   "gui.robohelper.modules": "Модули",
@@ -48,5 +48,13 @@
   "status.robohelper.searching_container": "Ищу контейнер",
   "status.robohelper.unloading": "Выгружаю добычу",
   "status.robohelper.no_container": "Нет доступного контейнера",
-  "message.robohelper.no_container": "Нет доступного сундука или бочки с местом для груза в рабочей зоне."
+  "message.robohelper.no_container": "Нет доступного сундука или бочки с местом для груза в рабочей зоне.",
+  "item.robohelper.miner_module": "Модуль «Шахтёр»",
+  "status.robohelper.mining": "Прокладываю тоннель",
+  "status.robohelper.mining_blocked": "Тоннель: препятствие",
+  "status.robohelper.tunnel_complete": "Тоннель завершён",
+  "message.robohelper.miner_protected": "Шахтёр остановлен: впереди защищённый блок или контейнер.",
+  "message.robohelper.miner_liquid": "Шахтёр остановлен: рядом с тоннелем жидкость.",
+  "message.robohelper.miner_drop": "Шахтёр остановлен: впереди обрыв глубже трёх блоков.",
+  "message.robohelper.miner_unloaded": "Шахтёр ожидает загрузки соседнего чанка."
 }

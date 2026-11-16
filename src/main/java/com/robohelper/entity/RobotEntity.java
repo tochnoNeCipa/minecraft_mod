@@ -58,6 +58,7 @@ public final class RobotEntity extends PathAwareEntity implements NamedScreenHan
     private static final TrackedData<Integer> MODE = DataTracker.registerData(
             RobotEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private Direction minerDirection = Direction.NORTH;
+    private int minerCommand;
     private BlockPos zoneCenter;
     private int zoneRadius = RobotConfig.ZONE_RADIUS;
     private boolean returningToZone;
@@ -416,12 +417,18 @@ public final class RobotEntity extends PathAwareEntity implements NamedScreenHan
         return minerDirection;
     }
 
+    /** Номер задания: повторное нажатие «Направление» начинает новый тоннель. */
+    public int getMinerCommand() {
+        return minerCommand;
+    }
+
     /** Направление кнопки задаётся текущим поворотом робота, только по горизонтали. */
     public void setMinerDirection(Direction direction) {
         if (direction.getAxis().isVertical()) {
             throw new IllegalArgumentException("Miner direction must be horizontal");
         }
         minerDirection = direction;
+        minerCommand++;
     }
 
     /** Статус вычисляется на сервере и передаётся экрану стандартными свойствами. */
@@ -554,6 +561,7 @@ public final class RobotEntity extends PathAwareEntity implements NamedScreenHan
             nbt.putUuid("Owner", ownerUuid);
         }
         nbt.putString("MinerDir", minerDirection.getName());
+        nbt.putInt("MinerCommand", minerCommand);
         nbt.putInt("Energy", getEnergy());
         nbt.putString("Mode", getMode().name());
         BlockPos center = getZoneCenter();
@@ -574,6 +582,7 @@ public final class RobotEntity extends PathAwareEntity implements NamedScreenHan
         nextStorageMessageTick = 0;
         super.readCustomDataFromNbt(nbt);
         ownerUuid = nbt.containsUuid("Owner") ? nbt.getUuid("Owner") : null;
+        minerCommand = nbt.getInt("MinerCommand");
         inventory.readNbt(nbt.getCompound("Inventory"));
         Direction savedDirection = Direction.byName(nbt.getString("MinerDir"));
         minerDirection = savedDirection != null && savedDirection.getAxis().isHorizontal()

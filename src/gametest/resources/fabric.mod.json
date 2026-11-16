@@ -15,7 +15,8 @@
       "com.robohelper.gametest.ModuleTests",
       "com.robohelper.gametest.LumberjackTests",
       "com.robohelper.gametest.FarmerTests",
-      "com.robohelper.gametest.LogisticsTests"
+      "com.robohelper.gametest.LogisticsTests",
+      "com.robohelper.gametest.MinerTests"
     ]
   },
   "depends": {

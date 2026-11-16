@@ -12,7 +12,7 @@
   "gui.robohelper.unload": "Unload",
   "gui.robohelper.zone_here": "Zone here",
   "gui.robohelper.direction": "Direction",
-  "gui.robohelper.direction_hint": "Current: %s. Click to use the direction the robot is facing.",
+  "gui.robohelper.direction_hint": "Current: %s. Start a new tunnel in the direction the robot faces.",
   "gui.robohelper.miner_required": "Requires the Miner module",
   "gui.robohelper.energy": "Energy: %s / %s",
   "gui.robohelper.modules": "Modules",
@@ -48,5 +48,13 @@
   "status.robohelper.searching_container": "Looking for storage",
   "status.robohelper.unloading": "Unloading cargo",
   "status.robohelper.no_container": "No storage available",
-  "message.robohelper.no_container": "No reachable chest or barrel has room for the cargo in the work zone."
+  "message.robohelper.no_container": "No reachable chest or barrel has room for the cargo in the work zone.",
+  "item.robohelper.miner_module": "Miner module",
+  "status.robohelper.mining": "Mining tunnel",
+  "status.robohelper.mining_blocked": "Tunnel blocked",
+  "status.robohelper.tunnel_complete": "Tunnel complete",
+  "message.robohelper.miner_protected": "Miner stopped: protected block or container ahead.",
+  "message.robohelper.miner_liquid": "Miner stopped: liquid next to the tunnel.",
+  "message.robohelper.miner_drop": "Miner stopped: drop deeper than three blocks ahead.",
+  "message.robohelper.miner_unloaded": "Miner is waiting for the neighboring chunk to load."
 }
